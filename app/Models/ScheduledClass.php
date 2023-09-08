@@ -8,14 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class ScheduledClass extends Model
 {
     use HasFactory;
-
+    protected $guarded = null;
+    protected $casts = [
+        'date_time' => 'datetime',
+    ];
 
     ############## relation ###################
-    public function instructor() {
+    public function instructor()
+    {
         return $this->belongsTo(User::class, 'instructor_id');
     }
 
-    public function classType() {
+    public function classType()
+    {
         return $this->belongsTo(ClassType::class);
     }
 }

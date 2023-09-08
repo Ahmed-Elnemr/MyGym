@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DashController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SchedualedClassController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,15 +14,27 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashController::class, 'index'])->middleware(['auth'])->name('dashboard');
+
+Route::get('/instructor/dashboard', function () {
+    return view('instructor.dashboard');
+})->middleware(['auth', 'role:instructor'])->name('instructor.dashboard');
+
+Route::resource('/instructor/schedule', SchedualedClassController::class)->only('index', 'store', 'create', 'destroy')->middleware(['auth', 'role:instructor']);
+
+Route::get('/member/dashboard', function () {
+    return view('member.dashboard');
+})->middleware(['auth', 'role:member'])->name('member.dashboard');
+
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+})->middleware(['auth', 'role:admin'])->name('admin.dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -28,4 +42,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
