@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,5 +23,10 @@ class ScheduledClass extends Model
     public function classType()
     {
         return $this->belongsTo(ClassType::class);
+    }
+
+    public function member()
+    {
+        return $this->belongsToMany(User::class, 'bookings');
     }
 }
