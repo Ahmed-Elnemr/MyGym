@@ -17,7 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // ScheduledClassPlicy::class
-         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
     /**
@@ -27,6 +27,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         Gate::define('schedule-class', function (User $user) {
             return $user->role === 'instructor';
+        });
+        Gate::define('book-class', function(User $user){
+            return $user->role === 'member';
         });
     }
 }
