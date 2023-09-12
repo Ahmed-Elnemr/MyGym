@@ -62,9 +62,10 @@ class SchedualedClassController extends Controller
         // if (auth()->user()->cannot('delete', $schedule)) {
         //     abort(403);
         // }
+        ClassCancel::dispatch($schedule);
         $schedule->member()->detach();
         $schedule->delete();
-        ClassCancel::dispatch($schedule);
+
 
         return redirect()->route('schedule.index');
     }

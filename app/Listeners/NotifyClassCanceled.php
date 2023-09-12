@@ -3,9 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\ClassCancel;
-use App\Mail\ClassCancelMail;
 use App\Models\ScheduledClass;
-use Illuminate\Support\Facades\Mail;
+use App\Notifications\CalssCancelNotification;
+use Illuminate\Support\Facades\Notification;
 
 class NotifyClassCanceled
 {
@@ -27,10 +27,11 @@ class NotifyClassCanceled
         $dateTime = $ScheduledClass->date_time;
 
         $details = compact('className', 'dateTime');
-        $members = $event->scheduledClass->member();
-        $members->each(function ($user) use ($details) {
-            Mail::to($user)->send(new ClassCancelMail($details));
-        });
+        $members = $event->scheduledClass->member()->get();
+        // $members->each(function ($user) use ($details) {
+        //     Mail::to($user)->send(new ClassCancelMail($details));
+        // });
 
+        Notification::send($members, new CalssCancelNotification($details));
     }
 }
