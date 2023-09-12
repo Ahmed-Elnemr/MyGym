@@ -3,6 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\ClassCancel;
+use App\Mail\ClassCancelMail;
+use App\Models\ScheduledClass;
+use Illuminate\Support\Facades\Mail;
 
 class NotifyClassCanceled
 {
@@ -19,7 +22,15 @@ class NotifyClassCanceled
      */
     public function handle(ClassCancel $event): void
     {
-        $scheduledClass = $event->scheduledClass;
-        //
+        $ScheduledClass = $event->scheduledClass;
+        $className = $ScheduledClass->classType->name;
+        $dateTime = $ScheduledClass->date_time;
+
+        $details = compact('className', 'dateTime');
+        $members = $event->scheduledClass->member();
+        $members->each(function ($user) use ($details) {
+            Mail::to($user)->send(new ClassCancelMail($details));
+        });
+
     }
 }
