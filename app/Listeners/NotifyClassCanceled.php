@@ -4,8 +4,9 @@ namespace App\Listeners;
 
 use App\Events\ClassCancel;
 use App\Models\ScheduledClass;
-use App\Notifications\CalssCancelNotification;
+use App\Jobs\NotifyClassCanceledJob;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\CalssCancelNotification;
 
 class NotifyClassCanceled
 {
@@ -31,7 +32,7 @@ class NotifyClassCanceled
         // $members->each(function ($user) use ($details) {
         //     Mail::to($user)->send(new ClassCancelMail($details));
         // });
+        NotifyClassCanceledJob::dispatch($details, $members);
 
-        Notification::send($members, new CalssCancelNotification($details));
     }
 }
